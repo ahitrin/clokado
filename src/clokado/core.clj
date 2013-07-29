@@ -8,3 +8,9 @@
 ;; 6. when current goal cannot be solved, the new open goal is created. current goal now depends on it
 ;; 7. when we achieve current goal, it becomes closed. now we can choose next goal to solve
 ;; 8. when we close mikado goal, the total problem is solved
+
+(defrecord node [name open depends id])
+
+(defn mikado [name]
+  "Creates initial mikado goal"
+  [(->node "Example goal" true [] 1)])
