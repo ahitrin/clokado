@@ -15,7 +15,7 @@
       (slice-should-be goals :depends '([]))
       (slice-should-be goals :id '(1)))))
 
-(deftest add-one-node
+(deftest add-one-goal
   (testing "what happens when we add one goal to the mikado"
     (let [first-goal (mikado "Eat icecream")
           goals (add first-goal "Buy icecream")]
@@ -24,7 +24,7 @@
       (slice-should-be goals :depends '([] [1]))
       (slice-should-be goals :id '(1 2)))))
 
-(deftest add-two-nodes
+(deftest add-two-goals
   (testing "what happens when we add more goals to the mikado"
     (let [first-goal (mikado "Kill the beast")
           next-goal (add first-goal "Prepare weapon")
@@ -34,7 +34,7 @@
       (slice-should-be goals :depends '([] [1] [1]))
       (slice-should-be goals :id '(1 2 3)))))
 
-(deftest add-two-nodes-in-a-chain
+(deftest add-two-goals-in-a-chain
   (testing "we should be able to add chains of goals"
     (let [kitty (mikado "Feed the kitty")
           food (add kitty "Find the food")
