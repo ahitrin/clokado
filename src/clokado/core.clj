@@ -22,7 +22,15 @@
     (let [max-id (apply max (map :id goals))]
       (conj goals {:name name :id (inc max-id) :open :open :depends [id]}))))
 
+(defn only-open [goals]
+  (filter #(= :open (:open %)) goals))
+
 (defn top [goals]
-  "Returns a list of goals which no one goal depends on"
-  (let [blocked-goals (set (reduce concat (map :depends goals)))]
-    (vec (filter #(not (contains? blocked-goals (:id %))) goals))))
+  "Returns a list of open goals which no one goal depends on"
+  (let [blocked-goals (set (reduce concat (map :depends (only-open goals))))]
+    (vec (only-open (filter #(not (contains? blocked-goals (:id %))) goals)))))
+
+(defn close [goals id]
+  "Mark goal with given id as closed"
+  "(actually, it's not id, just index for now)"
+  (assoc-in goals [(dec id) :open] :closed))

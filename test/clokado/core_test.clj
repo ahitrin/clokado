@@ -60,3 +60,15 @@
     (slice-should-be (top simplest) :name '("Just do it"))
     (slice-should-be (top kitty) :name '("Go to the store"))
     (slice-should-be (top beast) :name '("Prepare weapon" "Find the beast"))))
+
+;; tests on goal closing
+
+(deftest close-simlpe-goal
+  (testing "what happens when simple goal is being closed"
+    (let [goals (close kitty 3)]
+      (slice-should-be goals :name (map :name kitty))
+      (slice-should-be goals :open '(:open :open :closed))
+      (slice-should-be (top goals) :name '("Find the food")))
+    (let [goals (close beast 2)]
+      (slice-should-be goals :open '(:open :closed :open))
+      (slice-should-be (top goals) :name '("Find the beast")))))
