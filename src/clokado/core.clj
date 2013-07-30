@@ -23,3 +23,8 @@
     "Add new goal to existing ones, which blocks goal identified by id"
     (let [max-id (apply max (map :id goals))]
       (conj goals (->node name true [id] (inc max-id))))))
+
+(defn top [goals]
+  "Returns a list of goals which no one goal depends on"
+  (let [blocked-goals (set (reduce concat (map :depends goals)))]
+    (vec (filter #(not (contains? blocked-goals (:id %))) goals))))

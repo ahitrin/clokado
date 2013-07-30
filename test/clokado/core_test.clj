@@ -5,6 +5,8 @@
 (defn slice-should-be [goals field expected]
   (is (= (map field goals) expected)))
 
+;; tests on tree creation
+
 (deftest start-test
   (testing "there is one goal at start"
     (let [goals (mikado "Example goal")]
@@ -41,3 +43,20 @@
       (slice-should-be goals :open '(true true true))
       (slice-should-be goals :depends '([] [1] [2]))
       (slice-should-be goals :id '(1 2 3)))))
+
+;; tests on tree info
+
+(def simplest
+  (mikado "Just do it"))
+
+(def kitty
+  (add (add (mikado "Feed the kitty") "Find the food") "Go to the store" 2))
+
+(def beast
+  (add (add (mikado "Kill the beast") "Prepare weapon") "Find the beast"))
+
+(deftest list-top-goals
+  (testing "goal is considered top when no other goal depends on it"
+    (slice-should-be (top simplest) :name '("Just do it"))
+    (slice-should-be (top kitty) :name '("Go to the store"))
+    (slice-should-be (top beast) :name '("Prepare weapon" "Find the beast"))))
