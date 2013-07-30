@@ -31,3 +31,13 @@
       (slice-should-be goals :open '(true true true))
       (slice-should-be goals :depends '([] [1] [1]))
       (slice-should-be goals :id '(1 2 3)))))
+
+(deftest add-two-nodes-in-a-chain
+  (testing "we should be able to add chains of goals"
+    (let [kitty (mikado "Feed the kitty")
+          food (add kitty "Find the food")
+          goals (add food "Go to the store" 2)]
+      (slice-should-be goals :name '("Feed the kitty" "Find the food" "Go to the store"))
+      (slice-should-be goals :open '(true true true))
+      (slice-should-be goals :depends '([] [1] [2]))
+      (slice-should-be goals :id '(1 2 3)))))

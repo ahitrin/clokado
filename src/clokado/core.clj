@@ -15,7 +15,11 @@
   "Creates initial mikado goal"
   [(->node name true [] 1)])
 
-(defn add [goals name]
-  "Adds new goal to existing ones, which blocks mikado goal"
-  (let [max-id (apply max (map :id goals))]
-    (conj goals (->node name true [1] (inc max-id)))))
+(defn add
+  ([goals name]
+    "Adds new goal to existing ones, which blocks mikado goal"
+    (add goals name 1))
+  ([goals name id]
+    "Add new goal to existing ones, which blocks goal identified by id"
+    (let [max-id (apply max (map :id goals))]
+      (conj goals (->node name true [id] (inc max-id))))))
