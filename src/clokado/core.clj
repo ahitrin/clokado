@@ -9,11 +9,9 @@
 ;; 7. when we achieve current goal, it becomes closed. now we can choose next goal to solve
 ;; 8. when we close mikado goal, the total problem is solved
 
-(defrecord goal [name open depends id])
-
 (defn mikado [name]
   "Creates initial mikado goal"
-  [(->goal name :open [] 1)])
+  [{:name name :id 1 :open :open :depends []}])
 
 (defn add
   ([goals name]
@@ -22,7 +20,7 @@
   ([goals name id]
     "Add new goal to existing ones, which blocks goal identified by id"
     (let [max-id (apply max (map :id goals))]
-      (conj goals (->goal name :open [id] (inc max-id))))))
+      (conj goals {:name name :id (inc max-id) :open :open :depends [id]}))))
 
 (defn top [goals]
   "Returns a list of goals which no one goal depends on"
