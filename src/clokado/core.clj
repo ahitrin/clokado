@@ -13,7 +13,7 @@
 
 (defn mikado [name]
   "Creates initial mikado goal"
-  [(->goal name true [] 1)])
+  [(->goal name :open [] 1)])
 
 (defn add
   ([goals name]
@@ -22,7 +22,7 @@
   ([goals name id]
     "Add new goal to existing ones, which blocks goal identified by id"
     (let [max-id (apply max (map :id goals))]
-      (conj goals (->goal name true [id] (inc max-id))))))
+      (conj goals (->goal name :open [id] (inc max-id))))))
 
 (defn top [goals]
   "Returns a list of goals which no one goal depends on"
