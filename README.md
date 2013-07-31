@@ -20,9 +20,25 @@ A simple visualization example:
 
 (Almost) obviously that goal number 1 is your Mikado goal, and other goals block it.
 
-## What is not ready yet
+## To be implemented in version 0.2.0
 
-In Mikado Method, you can add or remove links between existing goals, but not yet in Clokado.
+clokado.core:
+
+ * completely remove existing goals
+ * add or remove links between existing goals
+ * checks for corner cases
+
+clokado.graphviz:
+
+ * call graphviz to create picture
+ * fix colors (green for done goals, red for undone)
+
+clokado.global:
+
+ * create new module
+ * define one global dynamic variable that is used as default mikado tree
+ * implement wrapper functions that call functions from `clokado.core` upon this variable
+ * **MOTIVATION**: simplify work with mikado in REPL
 
 ## Further plans
 
