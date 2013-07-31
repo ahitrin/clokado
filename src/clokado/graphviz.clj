@@ -19,6 +19,15 @@
 
 ;; untested (yes, I'm too lazy)
 
+(use '[clojure.java.shell :only [sh]])
+
 (defn write-dot [goals filename]
   (with-open [w (java.io.FileWriter. filename)]
     (.write w (clojure.string/join "\n" (to-graph goals)))))
+
+(defn compile-dot [filename]
+  (sh "dot" "-Tpng" "-o" (str filename ".png") filename))
+
+(defn to-png [goals filename]
+  (write-dot goals filename)
+  (compile-dot filename))

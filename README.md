@@ -28,10 +28,6 @@ clokado.core:
  * add or remove links between existing goals
  * checks for corner cases
 
-clokado.graphviz:
-
- * call graphviz to create picture
-
 clokado.global:
 
  * create new module
