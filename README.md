@@ -14,11 +14,31 @@ This library is in Alpha state, and general usage patterns are not clearly defin
  * you can use `top` function over your goal tree to see what active goals do you have
  * you can visualize your tree with functions in `clokado.graphviz` package (also you have to install [GraphViz](http://graphviz.org/))
 
-A simple visualization example:
+## REPL usage example
+
+I suppose that in most cases you need to work with one diagram at once. In that way the following workflow may be found as the simplest one:
+
+    (use 'clokado.global)
+    (mikado! "Feed the kitty" "example")
+
+Here "Feed the kitty" is your Mikado Goal, and "example" is the name of diagram to be drawn (actually, it's "example.png").
+
+You can launch your preffered image viewer to find that image "example.png" has appeared in the directory you've been launched REPL. Please enable auto-refresh and go on with diagram hacking:
+
+    (add! "Find the food")
+    (add! "Go to the store" 2)
+
+Here, 2 is the id of the second goal, and it can be easily recognized from the picture. When you don't append id as the parameter, the new goal is being attached to Mikado goal. Also you can see that picture is being updated after every your action.
+
+    (close! 3)
+
+When you finish the current goal, close it with `close!` function. Its color immediately changes.
+
+What we've got in result:
 
 ![pic](doc/example.png)
 
-(Almost) obviously that goal number 1 is your Mikado goal, and other goals block it.
+When you've got tired of current goal tree (or better complete it), just start new one with `mikado!` function.
 
 ## To be implemented in version 0.2.0
 
