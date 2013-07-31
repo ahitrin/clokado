@@ -28,13 +28,6 @@ clokado.core:
  * add or remove links between existing goals
  * checks for corner cases
 
-clokado.global:
-
- * create new module
- * define one global dynamic variable that is used as default mikado tree
- * implement wrapper functions that call functions from `clokado.core` upon this variable
- * **MOTIVATION**: simplify work with mikado in REPL
-
 ## Further plans
 
 I just want to use it for some time and determine what else should be done. Maybe, something like that:
