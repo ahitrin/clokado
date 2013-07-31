@@ -8,11 +8,11 @@
   (dosync (ref-set tree (mikado name))))
 
 (defn add!
-  ([name] (dosync (ref-set tree (add @tree name))))
-  ([name id] (dosync (ref-set tree (add @tree name id)))))
+  ([name] (dosync (alter tree add name)))
+  ([name id] (dosync (alter tree add name id))))
 
 (defn top! []
   (top @tree))
 
 (defn close! [id]
-  (dosync (ref-set tree (close @tree id))))
+  (dosync (alter tree close id)))
