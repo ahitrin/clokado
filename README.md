@@ -31,7 +31,6 @@ clokado.core:
 clokado.graphviz:
 
  * call graphviz to create picture
- * fix colors (green for done goals, red for undone)
 
 clokado.global:
 
