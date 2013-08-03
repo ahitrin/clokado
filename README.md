@@ -11,6 +11,8 @@ It's simple yet useful method for large-scale software refactoring. But you also
 This library is in Alpha state, and general usage patterns are not clearly defined yet. But what do we have for now:
 
  * you can use functions `mikado`, `add`, `close` to create new goals and close existing ones
+ * you can use `delete` function to remove unneeded goals
+ * you can use functions `link` and `unlink` to create and remove links between goals
  * you can use `top` function over your goal tree to see what active goals do you have
  * you can visualize your tree with functions in `clokado.graphviz` package (also you have to install [GraphViz](http://graphviz.org/))
 
