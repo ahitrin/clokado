@@ -95,11 +95,18 @@
 
 (deftest add-link-between-goals
   (testing "we can add more links between goals"
-    (let [goals (link beast 2 3)]
-      (slice-should-be goals :depends '([] [1] [1 2])))))
+    (slice-should-be (link beast 2 3) :depends '([] [1] [1 2]))))
 
 (deftest add-link-restrictions
   (testing "link addition must not break mikado tree goal order"
     (slice-should-be (link simplest 1 1) :depends '([]))
     (slice-should-be (link kitty 2 3) :depends '([] [1] [2]))
     (slice-should-be (link kitty 2 1) :depends '([] [1] [2]))))
+
+(deftest remove-link-between-goals
+  (testing "we can remove added links"
+    (slice-should-be (unlink (link kitty 3 2) 3 2) :depends '([] [1] [2]))))
+
+(deftest remove-link-restrictions
+  (testing "link removals must not break mikado tree goal order"
+    (slice-should-be (unlink kitty 1 2) :depends '([] [1] [2]))))

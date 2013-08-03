@@ -30,3 +30,6 @@
 
 (defn link! [a b]
   (dosync (alter tree link a b) (redraw!)))
+
+(defn unlink! [a b]
+  (dosync (alter tree unlink a b) (redraw!)))

@@ -44,7 +44,6 @@ When you've got tired of current goal tree (or better complete it), just start n
 
 clokado.core:
 
- * add or remove links between existing goals
  * checks for corner cases
 
 ## Further plans

@@ -25,6 +25,9 @@
 (defn only-open [goals]
   (filter #(= :open (:open %)) goals))
 
+(defn idx [goals id]
+  (.indexOf (map #(= id (:id %)) goals) true))
+
 (defn top [goals]
   "Returns a list of open goals which no one goal depends on"
   (let [blocked-goals (set (reduce concat (map :depends (only-open goals))))]
@@ -32,7 +35,7 @@
 
 (defn close [goals id]
   "Mark goal with given id as closed"
-  (let [index (.indexOf (map #(= id (:id %)) goals) true)]
+  (let [index (idx goals id)]
     (assoc-in goals [index :open] :closed)))
 
 (defn delete [goals id]
@@ -43,8 +46,16 @@
 
 (defn link [goals a b]
   "Creates a new link. Goal b now blocks goal a"
-  (let [b-index (.indexOf (map #(= b (:id %)) goals) true)
+  (let [b-index (idx goals b)
         old-deps (:depends (nth goals b-index))]
     (if (or (= a b) (= b 1) (.contains old-deps a))
       goals
       (assoc-in goals [b-index :depends] (conj old-deps a)))))
+
+(defn unlink [goals a b]
+  "Removes existing link between goals a and b"
+  (let [b-index (idx goals b)
+        old-deps (:depends (nth goals b-index))]
+    (if (= 1 (count old-deps))
+      goals
+      (assoc-in goals [b-index :depends] (vec (remove #(= % a) old-deps))))))
