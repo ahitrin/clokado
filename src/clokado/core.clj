@@ -42,7 +42,9 @@
   "Removes goal from the tree by id"
   (let [goals-without-id (vec (remove #(= id (:id %)) goals))
         blocking-goals (filter #(.contains (:depends %) id) goals)
-        goals-to-delete (map :id (filter #(= 1 (count (:depends %))) blocking-goals))]
+        goals-to-delete (map :id (filter #(= 1 (count (:depends %))) blocking-goals))
+        goals-to-cleanup (map :id (filter #(> 1 (count (:depends %))) blocking-goals))]
+        ;; TODO: cast unlink upon each goal in goals-to-cleanup
     (if (empty? goals-to-delete)
       goals-without-id
       (recur goals-without-id (first goals-to-delete)))))

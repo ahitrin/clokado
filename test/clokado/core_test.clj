@@ -94,7 +94,8 @@
 (deftest remove-goal-in-the-middle
   (testing "do not remove blocking goal when it depends on another goal"
     (let [goals (delete (link kitty 1 3) 2)]
-      (slice-should-be goals :name '("Feed the kitty" "Go to the store")))))
+      (slice-should-be goals :name '("Feed the kitty" "Go to the store"))
+      (slice-should-be goals :depends '([] [1])))))
 
 ;; tests on additional links
 
