@@ -32,5 +32,11 @@
 
 (defn close [goals id]
   "Mark goal with given id as closed"
-  "(actually, it's not id, just index for now)"
-  (assoc-in goals [(dec id) :open] :closed))
+  (let [index (.indexOf (map #(= id (:id %)) goals) true)]
+    (assoc-in goals [index :open] :closed)))
+
+(defn delete [goals id]
+  "Removes goal from the tree by id"
+   (vec (remove #(or (= id (:id %))
+                     (.contains (:depends %) id))
+                goals)))

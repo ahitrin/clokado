@@ -24,3 +24,6 @@
 
 (defn close! [id]
   (dosync (alter tree close id) (redraw!)))
+
+(defn delete! [id]
+  (dosync (alter tree delete id) (redraw!)))

@@ -72,3 +72,21 @@
     (let [goals (close beast 2)]
       (slice-should-be goals :open '(:open :closed :open))
       (slice-should-be (top goals) :name '("Find the beast")))))
+
+;; tests on goal removing
+
+(deftest delete-single-goal
+  (testing "comletely remove goal from tree"
+    (let [goals (delete (add (mikado "Go for a walk") "Do homework") 2)]
+      (slice-should-be goals :name '("Go for a walk")))))
+
+(deftest delete-goal-and-close-another-one
+  (testing "removal of goals doesn't break goal closing"
+    (let [goals (close (delete beast 2) 3)]
+      (slice-should-be goals :name '("Kill the beast" "Find the beast"))
+      (slice-should-be goals :open '(:open :closed)))))
+
+(deftest remove-goal-chain
+  (testing "when some goals block deleted goal, they should be removed too"
+    (let [goals (delete kitty 2)]
+      (slice-should-be goals :name '("Feed the kitty")))))
