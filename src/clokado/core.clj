@@ -40,9 +40,8 @@
 
 (defn delete [goals id]
   "Removes goal from the tree by id"
-   (vec (remove #(or (= id (:id %))
-                     (.contains (:depends %) id))
-                goals)))
+  (let [goals-without-id (remove #(= id (:id %)) goals)]
+    (vec (remove #(.contains (:depends %) id) goals-without-id))))
 
 (defn link [goals a b]
   "Creates a new link. Goal b now blocks goal a"
