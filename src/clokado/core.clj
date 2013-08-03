@@ -40,3 +40,11 @@
    (vec (remove #(or (= id (:id %))
                      (.contains (:depends %) id))
                 goals)))
+
+(defn link [goals a b]
+  "Creates a new link. Goal b now blocks goal a"
+  (let [b-index (.indexOf (map #(= b (:id %)) goals) true)
+        old-deps (:depends (nth goals b-index))]
+    (if (or (= a b) (= b 1) (.contains old-deps a))
+      goals
+      (assoc-in goals [b-index :depends] (conj old-deps a)))))

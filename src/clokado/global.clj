@@ -27,3 +27,6 @@
 
 (defn delete! [id]
   (dosync (alter tree delete id) (redraw!)))
+
+(defn link! [a b]
+  (dosync (alter tree link a b) (redraw!)))
