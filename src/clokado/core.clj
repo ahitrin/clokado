@@ -38,6 +38,11 @@
   (let [index (idx goals id)]
     (assoc-in goals [index :open] :closed)))
 
+(defn reopen [goals id]
+  "Mark goal with given id as open again"
+  (let [index (idx goals id)]
+    (assoc-in goals [index :open] :open)))
+
 (defn delete [goals id]
   "Removes goal from the tree by id"
   (let [goals-without-id (vec (remove #(= id (:id %)) goals))

@@ -46,7 +46,7 @@ When you've got tired of current goal tree (or better complete it), just start n
 
 clokado.core:
 
- * more functions: `reopen`, `rename`
+ * more functions: `rename`
  * checks for corner cases
 
 ## Further plans

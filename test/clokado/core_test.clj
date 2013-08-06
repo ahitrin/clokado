@@ -73,6 +73,11 @@
       (slice-should-be goals :open '(:open :closed :open))
       (slice-should-be (top goals) :name '("Find the beast")))))
 
+(deftest reopen-goal
+  (testing "we can close goal, and then reopen it again"
+    (let [goals (reopen (close kitty 3) 3)]
+      (slice-should-be goals :open '(:open :open :open)))))
+
 ;; tests on goal removing
 
 (deftest delete-single-goal
