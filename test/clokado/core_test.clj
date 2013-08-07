@@ -93,7 +93,7 @@
 
 (deftest remove-goal-chain
   (testing "when some goals block deleted goal, they should be removed too"
-    (let [goals (delete kitty 2)]
+    (let [goals (delete (add (add kitty "dummy" 2) "dummy" 2) 2)]
       (slice-should-be goals :name '("Feed the kitty")))))
 
 (deftest remove-goal-in-the-middle

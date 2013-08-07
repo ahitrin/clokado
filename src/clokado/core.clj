@@ -1,4 +1,5 @@
-(ns clokado.core)
+(ns clokado.core
+  (:use [clojure.set :only [intersection]]))
 
 ;; mikado rules:
 ;; 1. there's one goal at start, it's called 'mikado goal'
@@ -45,14 +46,13 @@
 
 (defn delete [goals id]
   "Removes goal from the tree by id"
-  (let [goals-without-id (vec (remove #(= id (:id %)) goals))
-        blocking-goals (filter #(.contains (:depends %) id) goals)
-        goals-to-delete (map :id (filter #(= 1 (count (:depends %))) blocking-goals))
-        goals-to-cleanup (map :id (filter #(> 1 (count (:depends %))) blocking-goals))]
-        ;; TODO: cast unlink upon each goal in goals-to-cleanup
-    (if (empty? goals-to-delete)
-      goals-without-id
-      (recur goals-without-id (first goals-to-delete)))))
+  (loop [acc goals
+         del-list (list id)]
+    (if (empty? del-list)
+      acc
+      (let [new-goals (vec (remove #(.contains del-list (:id %)) acc))
+            new-dels (map :id (remove #(empty? (intersection (into #{} del-list) (into #{} (:depends %)))) acc))]
+        (recur new-goals new-dels)))))
 
 (defn link [goals a b]
   "Creates a new link. Goal b now blocks goal a"
