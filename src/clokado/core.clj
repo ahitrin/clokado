@@ -51,13 +51,12 @@
 
 (defn delete [goals id]
   "Removes goal from the tree by id"
-  (loop [acc goals
-         del-list (list id)]
-    (if (empty? del-list)
-      acc
-      (let [new-goals (vec (remove #(.contains del-list (:id %)) acc))
-            new-dels (map :id (remove #(empty? (intersection (into #{} del-list) (into #{} (:depends %)))) acc))]
-        (recur new-goals new-dels)))))
+  (loop [goals goals ids (list id)]
+    (if (empty? ids)
+      goals
+      (let [goals' (vec (remove #(.contains ids (:id %)) goals))
+            ids' (map :id (remove #(empty? (intersection (into #{} ids) (into #{} (:depends %)))) goals))]
+        (recur goals' ids')))))
 
 (defn link [goals a b]
   "Creates a new link. Goal b now blocks goal a"
