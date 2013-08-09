@@ -44,6 +44,11 @@
       (slice-should-be goals :depends '([] [1] [2]))
       (slice-should-be goals :id '(1 2 3)))))
 
+(deftest rename-goal
+  (testing "any goal can be renamed"
+    (let [goals (add (mikado "first") "cauybfasdfa")]
+      (slice-should-be (rename goals 2 "second") :name '("first" "second")))))
+
 ;; tests on tree info
 
 (def simplest

@@ -34,6 +34,11 @@
   (let [blocked-goals (set (reduce concat (map :depends (only-open goals))))]
     (vec (only-open (filter #(not (contains? blocked-goals (:id %))) goals)))))
 
+(defn rename [goals id new-name]
+  "Change name of the given goal"
+  (let [index (idx goals id)]
+    (assoc-in goals [index :name] new-name)))
+
 (defn close [goals id]
   "Mark goal with given id as closed"
   (let [index (idx goals id)]

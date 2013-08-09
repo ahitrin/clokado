@@ -22,6 +22,9 @@
 (defn top! []
   (top @tree))
 
+(defn rename! [id new-name]
+  (dosync (alter tree rename id new-name) (redraw!)))
+
 (defn close! [id]
   (dosync (alter tree close id) (redraw!)))
 
