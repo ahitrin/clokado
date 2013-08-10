@@ -50,13 +50,22 @@
     (assoc-in goals [index :open] :open)))
 
 (defn delete [goals id]
-  "Removes goal from the tree by id"
-  (loop [goals goals ids (list id)]
+  "Recursevly removes goal from the tree by id, together with goals that block it.
+   Goals that depends also on some other goals, stay alive"
+  (loop [gs goals ids (list id)]
     (if (empty? ids)
-      goals
-      (let [goals' (vec (remove #(.contains ids (:id %)) goals))
-            ids' (map :id (remove #(empty? (intersection (into #{} ids) (into #{} (:depends %)))) goals))]
-        (recur goals' ids')))))
+      gs
+      (let [i (first ids)
+            deps (group-by #(= 1 (count (:depends %)))
+                           (filter #(.contains (:depends %) i) gs))
+            to-remove (deps true)
+            to-clean (deps false)
+            cleaned-gs (loop [gs gs ids (map :id to-clean)]
+                     (if (empty? ids)
+                         gs
+                         (recur (unlink gs i (first ids)) (rest ids))))]
+        (recur (vec (remove #(= i (:id %)) cleaned-gs))
+               (concat (rest ids) (map :id to-remove)))))))
 
 (defn link [goals a b]
   "Creates a new link. Goal b now blocks goal a"
