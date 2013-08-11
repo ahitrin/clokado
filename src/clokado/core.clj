@@ -49,6 +49,22 @@
   (let [index (idx goals id)]
     (assoc-in goals [index :open] :open)))
 
+(defn link [goals a b]
+  "Creates a new link. Goal b now blocks goal a"
+  (let [b-index (idx goals b)
+        old-deps (:depends (nth goals b-index))]
+    (if (or (= a b) (= b 1) (.contains old-deps a))
+      goals
+      (assoc-in goals [b-index :depends] (conj old-deps a)))))
+
+(defn unlink [goals a b]
+  "Removes existing link between goals a and b"
+  (let [b-index (idx goals b)
+        old-deps (:depends (nth goals b-index))]
+    (if (= 1 (count old-deps))
+      goals
+      (assoc-in goals [b-index :depends] (vec (remove #(= % a) old-deps))))))
+
 (defn delete [goals id]
   "Recursevly removes goal from the tree by id, together with goals that block it.
    Goals that depends also on some other goals, stay alive"
@@ -66,19 +82,3 @@
                          (recur (unlink gs i (first ids)) (rest ids))))]
         (recur (vec (remove #(= i (:id %)) cleaned-gs))
                (concat (rest ids) (map :id to-remove)))))))
-
-(defn link [goals a b]
-  "Creates a new link. Goal b now blocks goal a"
-  (let [b-index (idx goals b)
-        old-deps (:depends (nth goals b-index))]
-    (if (or (= a b) (= b 1) (.contains old-deps a))
-      goals
-      (assoc-in goals [b-index :depends] (conj old-deps a)))))
-
-(defn unlink [goals a b]
-  "Removes existing link between goals a and b"
-  (let [b-index (idx goals b)
-        old-deps (:depends (nth goals b-index))]
-    (if (= 1 (count old-deps))
-      goals
-      (assoc-in goals [b-index :depends] (vec (remove #(= % a) old-deps))))))
