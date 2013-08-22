@@ -42,12 +42,6 @@ What we've got in result:
 
 When you've got tired of current goal tree (or better complete it), just start new one with `mikado!` function.
 
-## To be implemented in version 0.2.0
-
-clokado.core:
-
- * checks for corner cases
-
 ## Further plans
 
 I just want to use it for some time and determine what else should be done. Maybe, something like that:
