@@ -12,7 +12,7 @@
 
 (defn mikado [name]
   "Creates initial mikado goal"
-  [{:name name :id 0 :open :open :depends []}])
+  [{:name name :id 0 :open true :depends []}])
 
 (defn add
   ([goals name]
@@ -21,10 +21,10 @@
   ([goals name id]
     "Add new goal to existing ones, which blocks goal identified by id"
     (let [max-id (apply max (map :id goals))]
-      (conj goals {:name name :id (inc max-id) :open :open :depends [id]}))))
+      (conj goals {:name name :id (inc max-id) :open true :depends [id]}))))
 
 (defn only-open [goals]
-  (filter #(= :open (:open %)) goals))
+  (filter #(true? (:open %)) goals))
 
 (defn idx [goals id]
   (.indexOf (map #(= id (:id %)) goals) true))
@@ -42,12 +42,12 @@
 (defn close [goals id]
   "Mark goal with given id as closed"
   (let [index (idx goals id)]
-    (assoc-in goals [index :open] :closed)))
+    (assoc-in goals [index :open] false)))
 
 (defn reopen [goals id]
   "Mark goal with given id as open again"
   (let [index (idx goals id)]
-    (assoc-in goals [index :open] :open)))
+    (assoc-in goals [index :open] true)))
 
 (defn link [goals a b]
   "Creates a new link. Goal b now blocks goal a"

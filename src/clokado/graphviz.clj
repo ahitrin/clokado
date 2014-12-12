@@ -2,7 +2,7 @@
 
 "This file contains functions that could be used to transform mikado trees to graphviz trees"
 
-(def color {:open "red" :closed "green"})
+(def color {true "red" false "green"})
 (def shape "box")
 
 (defn goal-to-node [{id :id name :name op :open}]

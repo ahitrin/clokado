@@ -11,7 +11,7 @@
   (testing "there is one goal at start"
     (let [goals (mikado "Example goal")]
       (slice-should-be goals :name '("Example goal"))
-      (slice-should-be goals :open '(:open))
+      (slice-should-be goals :open '(true))
       (slice-should-be goals :depends '([]))
       (slice-should-be goals :id '(0)))))
 
@@ -20,7 +20,7 @@
     (let [first-goal (mikado "Eat icecream")
           goals (add first-goal "Buy icecream")]
       (slice-should-be goals :name '("Eat icecream" "Buy icecream"))
-      (slice-should-be goals :open '(:open :open))
+      (slice-should-be goals :open '(true true))
       (slice-should-be goals :depends '([] [0]))
       (slice-should-be goals :id '(0 1)))))
 
@@ -30,7 +30,7 @@
           next-goal (add first-goal "Prepare weapon")
           goals (add next-goal "Find the beast")]
       (slice-should-be goals :name '("Kill the beast" "Prepare weapon" "Find the beast"))
-      (slice-should-be goals :open '(:open :open :open))
+      (slice-should-be goals :open '(true true true))
       (slice-should-be goals :depends '([] [0] [0]))
       (slice-should-be goals :id '(0 1 2)))))
 
@@ -40,7 +40,7 @@
           food (add kitty "Find the food")
           goals (add food "Go to the store" 1)]
       (slice-should-be goals :name '("Feed the kitty" "Find the food" "Go to the store"))
-      (slice-should-be goals :open '(:open :open :open))
+      (slice-should-be goals :open '(true true true))
       (slice-should-be goals :depends '([] [0] [1]))
       (slice-should-be goals :id '(0 1 2)))))
 
@@ -72,16 +72,16 @@
   (testing "what happens when simple goal is being closed"
     (let [goals (close kitty 2)]
       (slice-should-be goals :name (map :name kitty))
-      (slice-should-be goals :open '(:open :open :closed))
+      (slice-should-be goals :open '(true true false))
       (slice-should-be (top goals) :name '("Find the food")))
     (let [goals (close beast 1)]
-      (slice-should-be goals :open '(:open :closed :open))
+      (slice-should-be goals :open '(true false true))
       (slice-should-be (top goals) :name '("Find the beast")))))
 
 (deftest reopen-goal
   (testing "we can close goal, and then reopen it again"
     (let [goals (reopen (close kitty 2) 2)]
-      (slice-should-be goals :open '(:open :open :open)))))
+      (slice-should-be goals :open '(true true true)))))
 
 ;; tests on goal removing
 
@@ -94,7 +94,7 @@
   (testing "removal of goals doesn't break goal closing"
     (let [goals (close (delete beast 1) 2)]
       (slice-should-be goals :name '("Kill the beast" "Find the beast"))
-      (slice-should-be goals :open '(:open :closed)))))
+      (slice-should-be goals :open '(true false)))))
 
 (deftest remove-goal-chain
   (testing "when some goals block deleted goal, they should be removed too"
