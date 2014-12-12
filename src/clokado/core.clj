@@ -31,7 +31,7 @@
 
 (defn top [goals]
   "Returns a list of open goals which no one goal depends on"
-  (let [blocked-goals (set (reduce concat (map :depends (only-open goals))))]
+  (let [blocked-goals (->> goals only-open (mapcat :depends) set)]
     (vec (only-open (filter #(not (contains? blocked-goals (:id %))) goals)))))
 
 (defn rename [goals id new-name]
