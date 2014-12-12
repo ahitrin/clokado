@@ -12,12 +12,12 @@
 
 (defn mikado [name]
   "Creates initial mikado goal"
-  [{:name name :id 1 :open :open :depends []}])
+  [{:name name :id 0 :open :open :depends []}])
 
 (defn add
   ([goals name]
     "Adds new goal to existing ones, which blocks mikado goal"
-    (add goals name 1))
+    (add goals name 0))
   ([goals name id]
     "Add new goal to existing ones, which blocks goal identified by id"
     (let [max-id (apply max (map :id goals))]
@@ -53,7 +53,7 @@
   "Creates a new link. Goal b now blocks goal a"
   (let [b-index (idx goals b)
         old-deps (:depends (nth goals b-index))]
-    (if (or (= a b) (= b 1) (.contains old-deps a))
+    (if (or (= a b) (zero? b) (.contains old-deps a))
       goals
       (assoc-in goals [b-index :depends] (conj old-deps a)))))
 

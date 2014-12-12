@@ -28,11 +28,11 @@ Here "Feed the kitty" is your Mikado Goal, and "example" is the name of diagram 
 You can launch your preffered image viewer to find that image "example.png" has appeared in the directory you've been launched REPL. Please enable auto-refresh and go on with diagram hacking:
 
     (add! "Find the food")
-    (add! "Go to the store" 2)
+    (add! "Go to the store" 1)
 
-Here, 2 is the id of the second goal, and it can be easily recognized from the picture. When you don't append id as the parameter, the new goal is being attached to Mikado goal. Also you can see that picture is being updated after every your action.
+Here, 1 is the id of the second goal, and it can be easily recognized from the picture. When you don't append id as the parameter, the new goal is being attached to Mikado goal. Also you can see that picture is being updated after every your action.
 
-    (close! 3)
+    (close! 2)
 
 When you finish the current goal, close it with `close!` function. Its color immediately changes.
 

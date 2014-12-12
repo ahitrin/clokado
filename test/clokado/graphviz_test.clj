@@ -9,33 +9,33 @@
   (mikado "Just do it"))
 
 (def kitty
-  (add (add (mikado "Feed the kitty") "Find the food") "Go to the store" 2))
+  (add (add (mikado "Feed the kitty") "Find the food") "Go to the store" 1))
 
 (deftest simplest-case
   (testing "transformation of the smallest mikado tree"
     (is (= (to-graph simplest)
            '("digraph g {"
-             "1 [label=\"1: Just do it\", color=\"red\", shape=\"box\"];"
+             "0 [label=\"0: Just do it\", color=\"red\", shape=\"box\"];"
              "}")))))
 
 (deftest kitty-case
   (testing "transformation of more complex tree"
     (is (= (to-graph kitty)
            '("digraph g {"
-             "1 [label=\"1: Feed the kitty\", color=\"red\", shape=\"box\"];"
-             "2 [label=\"2: Find the food\", color=\"red\", shape=\"box\"];"
-             "3 [label=\"3: Go to the store\", color=\"red\", shape=\"box\"];"
+             "0 [label=\"0: Feed the kitty\", color=\"red\", shape=\"box\"];"
+             "1 [label=\"1: Find the food\", color=\"red\", shape=\"box\"];"
+             "2 [label=\"2: Go to the store\", color=\"red\", shape=\"box\"];"
+             "1 -> 0;"
              "2 -> 1;"
-             "3 -> 2;"
              "}")))))
 
 (deftest kitty-case2
   (testing "closed goals should be colored red"
-    (is (= (to-graph (close kitty 3))
+    (is (= (to-graph (close kitty 2))
            '("digraph g {"
-             "1 [label=\"1: Feed the kitty\", color=\"red\", shape=\"box\"];"
-             "2 [label=\"2: Find the food\", color=\"red\", shape=\"box\"];"
-             "3 [label=\"3: Go to the store\", color=\"green\", shape=\"box\"];"
+             "0 [label=\"0: Feed the kitty\", color=\"red\", shape=\"box\"];"
+             "1 [label=\"1: Find the food\", color=\"red\", shape=\"box\"];"
+             "2 [label=\"2: Go to the store\", color=\"green\", shape=\"box\"];"
+             "1 -> 0;"
              "2 -> 1;"
-             "3 -> 2;"
              "}")))))
