@@ -126,3 +126,7 @@
 (deftest remove-link-restrictions
   (testing "link removals must not break mikado tree goal order"
     (slice-should-be (unlink kitty 1 2) :depends '([] [1] [2]))))
+
+(comment
+  (map #(ns-unmap *ns* %) (keys (ns-interns *ns*)))
+  (run-tests))
