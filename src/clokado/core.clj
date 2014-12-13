@@ -20,8 +20,7 @@
     (add goals name 0))
   ([goals name id]
     "Add new goal to existing ones, which blocks goal identified by id"
-    (let [max-id (apply max (map :id goals))]
-      (conj goals {:name name :id (inc max-id) :open true :depends [id]}))))
+    (conj goals {:name name :id (count goals) :open true :depends [id]})))
 
 (defn only-open [goals]
   (filter #(true? (:open %)) goals))
