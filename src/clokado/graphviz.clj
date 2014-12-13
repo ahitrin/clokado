@@ -13,7 +13,7 @@
 
 (defn to-graph [goals]
   (flatten (list "digraph g {"
-             (map goal-to-node goals)
+             (->> goals (remove empty?) (map goal-to-node))
              (map dependencies-to-links goals)
              "}")))
 

@@ -73,12 +73,12 @@
       gs
       (let [i (first ids)
             deps (group-by #(= 1 (count (:depends %)))
-                           (filter #(.contains (:depends %) i) gs))
+                           (->> gs (remove empty?) (filter #(.contains (:depends %) i))))
             to-remove (deps true)
             to-clean (deps false)
             cleaned-gs (loop [gs gs ids (map :id to-clean)]
                      (if (empty? ids)
                          gs
                          (recur (unlink gs i (first ids)) (rest ids))))]
-        (recur (vec (remove #(= i (:id %)) cleaned-gs))
+        (recur (vec (assoc cleaned-gs i []))
                (concat (rest ids) (map :id to-remove)))))))

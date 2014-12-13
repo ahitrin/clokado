@@ -3,7 +3,7 @@
         clokado.core))
 
 (defn slice-should-be [goals field expected]
-  (is (= (map field goals) expected)))
+  (is (= (->> goals (map field) (remove nil?)) expected)))
 
 ;; tests on tree creation
 
