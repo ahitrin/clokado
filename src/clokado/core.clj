@@ -28,7 +28,7 @@
 (defn top [goals]
   "Returns a list of open goals which no one goal depends on"
   (let [blocked-goals (->> goals only-open (mapcat :depends) set)]
-    (vec (only-open (filter #(not (contains? blocked-goals (:id %))) goals)))))
+    (vec (only-open (remove #(contains? blocked-goals (:id %)) goals)))))
 
 (defn rename [goals id new-name]
   "Change name of the given goal"
