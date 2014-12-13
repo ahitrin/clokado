@@ -26,9 +26,6 @@
 (defn only-open [goals]
   (filter #(true? (:open %)) goals))
 
-(defn idx [goals id]
-  (.indexOf (map #(= id (:id %)) goals) true))
-
 (defn top [goals]
   "Returns a list of open goals which no one goal depends on"
   (let [blocked-goals (->> goals only-open (mapcat :depends) set)]
@@ -36,34 +33,29 @@
 
 (defn rename [goals id new-name]
   "Change name of the given goal"
-  (let [index (idx goals id)]
-    (assoc-in goals [index :name] new-name)))
+  (assoc-in goals [id :name] new-name))
 
 (defn close [goals id]
   "Mark goal with given id as closed"
-  (let [index (idx goals id)]
-    (assoc-in goals [index :open] false)))
+  (assoc-in goals [id :open] false))
 
 (defn reopen [goals id]
   "Mark goal with given id as open again"
-  (let [index (idx goals id)]
-    (assoc-in goals [index :open] true)))
+  (assoc-in goals [id :open] true))
 
 (defn link [goals a b]
   "Creates a new link. Goal b now blocks goal a"
-  (let [b-index (idx goals b)
-        old-deps (:depends (nth goals b-index))]
+  (let [old-deps (:depends (nth goals b))]
     (if (or (= a b) (zero? b) (.contains old-deps a))
       goals
-      (assoc-in goals [b-index :depends] (conj old-deps a)))))
+      (assoc-in goals [b :depends] (conj old-deps a)))))
 
 (defn unlink [goals a b]
   "Removes existing link between goals a and b"
-  (let [b-index (idx goals b)
-        old-deps (:depends (nth goals b-index))]
+  (let [old-deps (:depends (nth goals b))]
     (if (= 1 (count old-deps))
       goals
-      (assoc-in goals [b-index :depends] (vec (remove #(= % a) old-deps))))))
+      (assoc-in goals [b :depends] (vec (remove #(= % a) old-deps))))))
 
 (defn delete [goals id]
   "Recursevly removes goal from the tree by id, together with goals that block it.
