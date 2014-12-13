@@ -12,8 +12,7 @@
     (let [goals (mikado "Example goal")]
       (slice-should-be goals :name '("Example goal"))
       (slice-should-be goals :open '(true))
-      (slice-should-be goals :depends '([]))
-      (slice-should-be goals :id '(0)))))
+      (slice-should-be goals :depends '([])))))
 
 (deftest add-one-goal
   (testing "what happens when we add one goal to the mikado"
@@ -21,8 +20,7 @@
           goals (add first-goal "Buy icecream")]
       (slice-should-be goals :name '("Eat icecream" "Buy icecream"))
       (slice-should-be goals :open '(true true))
-      (slice-should-be goals :depends '([] [0]))
-      (slice-should-be goals :id '(0 1)))))
+      (slice-should-be goals :depends '([] [0])))))
 
 (deftest add-two-goals
   (testing "what happens when we add more goals to the mikado"
@@ -31,8 +29,7 @@
           goals (add next-goal "Find the beast")]
       (slice-should-be goals :name '("Kill the beast" "Prepare weapon" "Find the beast"))
       (slice-should-be goals :open '(true true true))
-      (slice-should-be goals :depends '([] [0] [0]))
-      (slice-should-be goals :id '(0 1 2)))))
+      (slice-should-be goals :depends '([] [0] [0])))))
 
 (deftest add-two-goals-in-a-chain
   (testing "we should be able to add chains of goals"
@@ -41,8 +38,7 @@
           goals (add food "Go to the store" 1)]
       (slice-should-be goals :name '("Feed the kitty" "Find the food" "Go to the store"))
       (slice-should-be goals :open '(true true true))
-      (slice-should-be goals :depends '([] [0] [1]))
-      (slice-should-be goals :id '(0 1 2)))))
+      (slice-should-be goals :depends '([] [0] [1])))))
 
 (deftest rename-goal
   (testing "any goal can be renamed"
