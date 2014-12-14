@@ -77,5 +77,5 @@
                      (if (empty? ids)
                          gs
                          (recur (unlink gs i (first ids)) (rest ids))))]
-        (recur (vec (assoc cleaned-gs i []))
+        (recur (vec (assoc cleaned-gs i {}))
                (concat (rest ids) to-remove))))))
