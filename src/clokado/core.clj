@@ -68,10 +68,11 @@
       (let [i (first ids)
             deps (->> gs
                       (remove empty?)
-                      (filter #(.contains (:depends %) i))
-                      (group-by #(= 1 (count (:depends %)))))
-            to-remove (map :id (deps true))
-            to-clean (map :id (deps false))
+                      (map #(list (get % :id) (get % :depends)))
+                      (filter #(.contains (second %) i))
+                      (group-by #(= 1 (count (second %)))))
+            to-remove (map first (deps true))
+            to-clean (map first (deps false))
             cleaned-gs (loop [gs gs ids to-clean]
                      (if (empty? ids)
                          gs
