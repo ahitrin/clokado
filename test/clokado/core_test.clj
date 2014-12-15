@@ -12,7 +12,7 @@
     (let [goals (mikado "Example goal")]
       (slice-should-be goals :name '("Example goal"))
       (slice-should-be goals :open '(true))
-      (slice-should-be goals :depends '([])))))
+      (slice-should-be goals :depends '(#{})))))
 
 (deftest add-one-goal
   (testing "what happens when we add one goal to the mikado"
@@ -20,7 +20,7 @@
           goals (add first-goal "Buy icecream")]
       (slice-should-be goals :name '("Eat icecream" "Buy icecream"))
       (slice-should-be goals :open '(true true))
-      (slice-should-be goals :depends '([] [0])))))
+      (slice-should-be goals :depends '(#{} #{0})))))
 
 (deftest add-two-goals
   (testing "what happens when we add more goals to the mikado"
@@ -29,7 +29,7 @@
           goals (add next-goal "Find the beast")]
       (slice-should-be goals :name '("Kill the beast" "Prepare weapon" "Find the beast"))
       (slice-should-be goals :open '(true true true))
-      (slice-should-be goals :depends '([] [0] [0])))))
+      (slice-should-be goals :depends '(#{} #{0} #{0})))))
 
 (deftest add-two-goals-in-a-chain
   (testing "we should be able to add chains of goals"
@@ -38,7 +38,7 @@
           goals (add food "Go to the store" 1)]
       (slice-should-be goals :name '("Feed the kitty" "Find the food" "Go to the store"))
       (slice-should-be goals :open '(true true true))
-      (slice-should-be goals :depends '([] [0] [1])))))
+      (slice-should-be goals :depends '(#{} #{0} #{1})))))
 
 (deftest rename-goal
   (testing "any goal can be renamed"
@@ -101,27 +101,27 @@
   (testing "do not remove blocking goal when it depends on another goal"
     (let [goals (delete (link kitty 0 2) 1)]
       (slice-should-be goals :name '("Feed the kitty" "Go to the store"))
-      (slice-should-be goals :depends '([] [0])))))
+      (slice-should-be goals :depends '(#{} #{0})))))
 
 ;; tests on additional links
 
 (deftest add-link-between-goals
   (testing "we can add more links between goals"
-    (slice-should-be (link beast 1 2) :depends '([] [0] [0 1]))))
+    (slice-should-be (link beast 1 2) :depends '(#{} #{0} #{0 1}))))
 
 (deftest add-link-restrictions
   (testing "link addition must not break mikado tree goal order"
-    (slice-should-be (link simplest 0 0) :depends '([]))
-    (slice-should-be (link kitty 1 2) :depends '([] [0] [1]))
-    (slice-should-be (link kitty 1 0) :depends '([] [0] [1]))))
+    (slice-should-be (link simplest 0 0) :depends '(#{}))
+    (slice-should-be (link kitty 1 2) :depends '(#{} #{0} #{1}))
+    (slice-should-be (link kitty 1 0) :depends '(#{} #{0} #{1}))))
 
 (deftest remove-link-between-goals
   (testing "we can remove added links"
-    (slice-should-be (unlink (link kitty 2 1) 2 1) :depends '([] [0] [1]))))
+    (slice-should-be (unlink (link kitty 2 1) 2 1) :depends '(#{} #{0} #{1}))))
 
 (deftest remove-link-restrictions
   (testing "link removals must not break mikado tree goal order"
-    (slice-should-be (unlink kitty 0 1) :depends '([] [0] [1]))))
+    (slice-should-be (unlink kitty 0 1) :depends '(#{} #{0} #{1}))))
 
 (comment
   (map #(ns-unmap *ns* %) (keys (ns-interns *ns*)))

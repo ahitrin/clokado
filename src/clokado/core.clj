@@ -12,7 +12,7 @@
 
 (defn mikado [name]
   "Creates initial mikado goal"
-  [{:name name :id 0 :open true :depends []}])
+  [{:name name :id 0 :open true :depends #{}}])
 
 (defn add
   ([goals name]
@@ -20,7 +20,7 @@
     (add goals name 0))
   ([goals name id]
     "Add new goal to existing ones, which blocks goal identified by id"
-    (conj goals {:name name :id (count goals) :open true :depends [id]})))
+    (conj goals {:name name :id (count goals) :open true :depends #{id}})))
 
 (defn only-open [goals]
   (filter #(true? (:open %)) goals))
@@ -50,14 +50,14 @@
   (let [old-deps (:depends (nth goals b))]
     (if (or (= a b) (zero? b) (.contains old-deps a))
       goals
-      (assoc-in goals [b :depends] (conj old-deps a)))))
+      (assoc-in goals [b :depends] (set (conj old-deps a))))))
 
 (defn unlink [goals a b]
   "Removes existing link between goals a and b"
   (let [old-deps (:depends (nth goals b))]
     (if (= 1 (count old-deps))
       goals
-      (assoc-in goals [b :depends] (vec (remove #(= % a) old-deps))))))
+      (assoc-in goals [b :depends] (set (remove #(= % a) old-deps))))))
 
 (defn delete [goals id]
   "Recursevly removes goal from the tree by id, together with goals that block it.
