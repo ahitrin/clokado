@@ -12,7 +12,7 @@
 
 (defn mikado [name]
   "Creates initial mikado goal"
-  [{:name name :id 0 :open true :depends #{}}])
+  [{:name name :open true :depends #{}}])
 
 (defn add
   ([goals name]
@@ -20,7 +20,7 @@
     (add goals name 0))
   ([goals name id]
     "Add new goal to existing ones, which blocks goal identified by id"
-    (conj goals {:name name :id (count goals) :open true :depends #{id}})))
+    (conj goals {:name name :open true :depends #{id}})))
 
 (defn only-open [goals]
   (filter #(true? (:open %)) goals))
