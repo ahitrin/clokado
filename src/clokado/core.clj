@@ -1,5 +1,5 @@
 (ns clokado.core
-  (:use [clojure.set :only [intersection]]))
+  (:use [clojure.set :only [difference]]))
 
 ;; mikado rules:
 ;; 1. there's one goal at start, it's called 'mikado goal'
@@ -60,22 +60,18 @@
       (assoc-in goals [b :depends] (set (remove #(= % a) old-deps))))))
 
 (defn delete [goals id]
-  "Recursevly removes goal from the tree by id, together with goals that block it.
+  "Recursively removes goal from the tree by id, together with goals that block it.
    Goals that depends also on some other goals, stay alive"
   (loop [gs goals ids (list id)]
     (if (empty? ids)
       gs
-      (let [i (first ids)
-            deps (->> gs
-                      (remove empty?)
-                      (map #(list (get % :id) (get % :depends)))
-                      (filter #(.contains (second %) i))
-                      (group-by #(= 1 (count (second %)))))
-            to-remove (map first (deps true))
-            to-clean (map first (deps false))
-            cleaned-gs (loop [gs gs ids to-clean]
-                     (if (empty? ids)
-                         gs
-                         (recur (unlink gs i (first ids)) (rest ids))))]
-        (recur (vec (assoc cleaned-gs i {}))
-               (concat (rest ids) to-remove))))))
+      (let [next-goals (->> (eval (macroexpand `(assoc ~gs ~@(mapcat #(list % {}) ids))))
+                            (map #(if (nil? (:depends %)) {} (update-in % [:depends] difference ids)))
+                            vec)
+            next-id (->> next-goals
+                         (map-indexed #(list %1 (if (empty? %2) -1 (count (:depends %2)))))
+                         (filter #(zero? (second %)))
+                         (map first)
+                         (filter #(and (pos? %) (not (.contains ids %))))
+                         set)]
+        (recur next-goals next-id)))))
