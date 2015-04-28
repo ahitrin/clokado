@@ -15,7 +15,7 @@
          "\", color=\"" (color op) "\", shape=\"" shape "\"];")))
 
 (defn dependencies-to-links [[id goal]]
-  (map #(str id " -> " % ";") (:depends goal)))
+  (map #(str id " -> " % " [color=\"black\"];") (:depends goal)))
 
 (defn to-graph [goals]
   (flatten (list "digraph g {"

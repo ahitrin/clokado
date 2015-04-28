@@ -25,8 +25,8 @@
              "0 [label=\"0: Feed the kitty\", color=\"red\", shape=\"box\"];"
              "1 [label=\"1: Find the food\", color=\"red\", shape=\"box\"];"
              "2 [label=\"2: Go to the store\", color=\"red\", shape=\"box\"];"
-             "1 -> 0;"
-             "2 -> 1;"
+             "1 -> 0 [color=\"black\"];"
+             "2 -> 1 [color=\"black\"];"
              "}")))))
 
 (deftest kitty-case2
@@ -36,8 +36,8 @@
              "0 [label=\"0: Feed the kitty\", color=\"red\", shape=\"box\"];"
              "1 [label=\"1: Find the food\", color=\"red\", shape=\"box\"];"
              "2 [label=\"2: Go to the store\", color=\"green\", shape=\"box\"];"
-             "1 -> 0;"
-             "2 -> 1;"
+             "1 -> 0 [color=\"black\"];"
+             "2 -> 1 [color=\"black\"];"
              "}")))))
 
 (deftest kitty-case3
@@ -46,7 +46,7 @@
            '("digraph g {"
              "0 [label=\"0: Feed the kitty\", color=\"red\", shape=\"box\"];"
              "1 [label=\"1: Find the food\", color=\"red\", shape=\"box\"];"
-             "1 -> 0;"
+             "1 -> 0 [color=\"black\"];"
              "}")))))
 
 (comment
