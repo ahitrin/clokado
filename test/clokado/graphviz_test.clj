@@ -37,7 +37,7 @@
              "1 [label=\"1: Find the food\", color=\"red\", shape=\"box\"];"
              "2 [label=\"2: Go to the store\", color=\"green\", shape=\"box\"];"
              "1 -> 0 [color=\"black\"];"
-             "2 -> 1 [color=\"black\"];"
+             "2 -> 1 [color=\"grey\"];"
              "}")))))
 
 (deftest kitty-case3
