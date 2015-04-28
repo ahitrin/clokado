@@ -9,19 +9,22 @@
   (keep-indexed (fn [i v] (when (seq v) (list i v)))
                 goals))
 
-(defn goal-to-node [[id goal]]
-  (let [name (:name goal) op (:open goal)]
-    (str id " [label=\"" id ": " name
-         "\", color=\"" (color op) "\", shape=\"" shape "\"];")))
+(defn goal-to-node [goals]
+  (for [[id goal] goals]
+    (let [name (:name goal) op (:open goal)]
+      (str id " [label=\"" id ": " name
+           "\", color=\"" (color op) "\", shape=\"" shape "\"];"))))
 
-(defn dependencies-to-links [[id goal]]
-  (map #(str id " -> " % " [color=\"black\"];") (:depends goal)))
+(defn dependencies-to-links [goals]
+  (for [[id goal] goals]
+       (map #(str id " -> " % " [color=\"black\"];") (:depends goal))))
 
 (defn to-graph [goals]
-  (flatten (list "digraph g {"
-             (->> goals enumerate-and-drop-empty (map goal-to-node))
-             (->> goals enumerate-and-drop-empty (map dependencies-to-links))
-             "}")))
+  (let [prepared-goals (enumerate-and-drop-empty goals)]
+    (flatten (list "digraph g {"
+               (goal-to-node prepared-goals)
+               (dependencies-to-links prepared-goals)
+               "}"))))
 
 ;; untested (yes, I'm too lazy)
 
