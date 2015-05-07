@@ -3,6 +3,7 @@
 "This file contains functions that could be used to transform mikado trees to graphviz trees"
 
 (def color {true "red" false "green"})
+(def link-color {true "grey" false "black"})
 (def shape "box")
 
 (defn enumerate-and-drop-empty [goals]
@@ -15,15 +16,19 @@
       (str id " [label=\"" id ": " name
            "\", color=\"" (color op) "\", shape=\"" shape "\"];"))))
 
-(defn dependencies-to-links [goals]
+(defn dependencies-to-links [goals closed-ids]
   (for [[id goal] goals]
-       (map #(str id " -> " % " [color=\"black\"];") (:depends goal))))
+    (let [closed? (contains? closed-ids id)
+          col (link-color closed?)]
+      (map #(str id " -> " % " [color=\"" col "\"];")
+           (:depends goal)))))
 
 (defn to-graph [goals]
-  (let [prepared-goals (enumerate-and-drop-empty goals)]
+  (let [prepared-goals (enumerate-and-drop-empty goals)
+        closed (set (map first (remove (fn [[i v]] (:open v)) prepared-goals)))]
     (flatten (list "digraph g {"
                (goal-to-node prepared-goals)
-               (dependencies-to-links prepared-goals)
+               (dependencies-to-links prepared-goals closed)
                "}"))))
 
 ;; untested (yes, I'm too lazy)
