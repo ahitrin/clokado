@@ -52,6 +52,6 @@ I just want to use it for some time and determine what else should be done. Mayb
 
 ## License
 
-Copyright © 2013-2014 Andrey Hitrin
+Copyright © 2013-2015 Andrey Hitrin
 
 Distributed under the Eclipse Public License, the same as Clojure.
