@@ -5,11 +5,9 @@
 (def color {true "red" false "green"})
 (def shape "box")
 
-(defn prepared [goals]
-  (->> goals
-       (interleave (range))
-       (partition 2)
-       (remove #(empty? (nth % 1)))))
+(defn enumerate-and-drop-empty [goals]
+  (keep-indexed (fn [i v] (when (seq v) (list i v)))
+                goals))
 
 (defn goal-to-node [[id goal]]
   (let [name (:name goal) op (:open goal)]
@@ -21,8 +19,8 @@
 
 (defn to-graph [goals]
   (flatten (list "digraph g {"
-             (->> goals prepared (map goal-to-node))
-             (->> goals prepared (map dependencies-to-links))
+             (->> goals enumerate-and-drop-empty (map goal-to-node))
+             (->> goals enumerate-and-drop-empty (map dependencies-to-links))
              "}")))
 
 ;; untested (yes, I'm too lazy)
