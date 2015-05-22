@@ -22,15 +22,12 @@
     "Add new goal to existing ones, which blocks goal identified by id"
     (conj goals {:name name :open true :depends #{id}})))
 
-(defn only-open [goals]
-  (filter #(true? (:open %)) goals))
-
 (defn top [goals]
   "Returns a list of open goals which no one goal depends on"
-  (let [blocked-goals (->> goals only-open (mapcat :depends) set)]
+  (let [blocked-goals (->> goals (filter :open) (mapcat :depends) set)]
     (->> goals
          (keep-indexed #(when-not (.contains blocked-goals %1) %2))
-         only-open
+         (filter :open)
          vec)))
 
 (defn rename [goals id new-name]
