@@ -10,17 +10,15 @@
   (partial keep-indexed #(when (seq %2) (list %1 %2))))
 
 (defn goal-to-node [goals]
-  (for [[id goal] goals]
-    (let [name (:name goal) op (:open goal)]
-      (str id " [label=\"" id ": " name
-           "\", color=\"" (color op) "\", shape=\"" shape "\"];"))))
+  (for [[id {name :name op :open}] goals]
+    (str id " [label=\"" id ": " name
+         "\", color=\"" (color op) "\", shape=\"" shape "\"];")))
 
 (defn dependencies-to-links [goals closed-ids]
-  (for [[id goal] goals]
+  (for [[id {dep :depends}] goals]
     (let [closed? (contains? closed-ids id)
           col (link-color closed?)]
-      (map #(str id " -> " % " [color=\"" col "\"];")
-           (:depends goal)))))
+      (map #(str id " -> " % " [color=\"" col "\"];") dep))))
 
 (defn to-graph [goals]
   (let [prepared-goals (enumerate-and-drop-empty goals)
