@@ -6,9 +6,8 @@
 (def link-color {true "grey" false "black"})
 (def shape "box")
 
-(defn enumerate-and-drop-empty [goals]
-  (keep-indexed (fn [i v] (when (seq v) (list i v)))
-                goals))
+(def enumerate-and-drop-empty
+  (partial keep-indexed #(when (seq %2) (list %1 %2))))
 
 (defn goal-to-node [goals]
   (for [[id goal] goals]
