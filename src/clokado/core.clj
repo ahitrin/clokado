@@ -45,7 +45,7 @@
 (defn link [goals a b]
   "Creates a new link. Goal b now blocks goal a"
   (let [old-deps (:depends (nth goals b))]
-    (if (or (= a b) (zero? b) (.contains old-deps a))
+    (if (or (= a b) (zero? b))
       goals
       (assoc-in goals [b :depends] (set (conj old-deps a))))))
 
