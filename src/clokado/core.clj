@@ -64,9 +64,7 @@
       (let [next-goals (->> (reduce #(assoc %1 %2 {}) gs ids)
                             (mapv #(if (nil? (:depends %)) {} (update-in % [:depends] difference ids))))
             next-id (->> next-goals
-                         (map-indexed #(list %1 (if (empty? %2) -1 (count (:depends %2)))))
-                         (filter #(zero? (second %)))
-                         (map first)
-                         (filter #(and (pos? %) (not (.contains ids %))))
-                         set)]
+                         (remove empty?)
+                         (filter #(and (pos? (:id %)) (empty? (:depends %))))
+                         (map :id))]
         (recur next-goals next-id)))))
