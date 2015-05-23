@@ -61,7 +61,7 @@
   (loop [gs goals ids (list id)]
     (if (empty? ids)
       gs
-      (let [next-goals (->> (eval (macroexpand `(assoc ~gs ~@(mapcat #(list % {}) ids))))
+      (let [next-goals (->> (reduce #(assoc %1 %2 {}) gs ids)
                             (map #(if (nil? (:depends %)) {} (update-in % [:depends] difference ids)))
                             vec)
             next-id (->> next-goals
