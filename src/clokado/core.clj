@@ -49,11 +49,11 @@
     (update-in goals [b :depends] conj a)))
 
 (defn unlink [goals a b]
-  "Removes existing link between goals a and b"
+  "Removes existing link between goals a and b. The last link cannot be removed"
   (let [old-deps (:depends (nth goals b))]
     (if (= 1 (count old-deps))
       goals
-      (assoc-in goals [b :depends] (set (remove #(= % a) old-deps))))))
+      (update-in goals [b :depends] disj a))))
 
 (defn delete [goals id]
   "Recursively removes goal from the tree by id, together with goals that block it.
