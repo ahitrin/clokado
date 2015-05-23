@@ -7,15 +7,15 @@
 (def shape "box")
 
 (defn goal-to-node [goals]
-  (for [{id :id name :name op :open} goals]
+  (for [{:keys [id name open]} goals]
     (str id " [label=\"" id ": " name
-         "\", color=\"" (color op) "\", shape=\"" shape "\"];")))
+         "\", color=\"" (color open) "\", shape=\"" shape "\"];")))
 
 (defn dependencies-to-links [goals closed-ids]
-  (for [{id :id dep :depends} goals]
+  (for [{:keys [id depends]} goals]
     (let [closed? (contains? closed-ids id)
           col (link-color closed?)]
-      (map #(str id " -> " % " [color=\"" col "\"];") dep))))
+      (map #(str id " -> " % " [color=\"" col "\"];") depends))))
 
 (defn to-graph [goals]
   (let [prepared-goals (remove empty? goals)
