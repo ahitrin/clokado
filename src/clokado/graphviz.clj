@@ -6,23 +6,20 @@
 (def link-color {true "grey" false "black"})
 (def shape "box")
 
-(def enumerate-and-drop-empty
-  (partial keep-indexed #(when (seq %2) (list %1 %2))))
-
 (defn goal-to-node [goals]
-  (for [[id {name :name op :open}] goals]
+  (for [{id :id name :name op :open} goals]
     (str id " [label=\"" id ": " name
          "\", color=\"" (color op) "\", shape=\"" shape "\"];")))
 
 (defn dependencies-to-links [goals closed-ids]
-  (for [[id {dep :depends}] goals]
+  (for [{id :id dep :depends} goals]
     (let [closed? (contains? closed-ids id)
           col (link-color closed?)]
       (map #(str id " -> " % " [color=\"" col "\"];") dep))))
 
 (defn to-graph [goals]
-  (let [prepared-goals (enumerate-and-drop-empty goals)
-        closed (set (map first (remove (fn [[i v]] (:open v)) prepared-goals)))]
+  (let [prepared-goals (remove empty? goals)
+        closed (->> prepared-goals (remove :open) (map :id) set)]
     (flatten (list "digraph g {"
                (goal-to-node prepared-goals)
                (dependencies-to-links prepared-goals closed)
