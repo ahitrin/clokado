@@ -47,7 +47,7 @@
   (let [old-deps (:depends (nth goals b))]
     (if (or (= a b) (zero? b))
       goals
-      (assoc-in goals [b :depends] (set (conj old-deps a))))))
+      (assoc-in goals [b :depends] (conj old-deps a)))))
 
 (defn unlink [goals a b]
   "Removes existing link between goals a and b"
