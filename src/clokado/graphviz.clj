@@ -3,7 +3,7 @@
 "This file contains functions that could be used to transform mikado trees to graphviz trees"
 
 (def color {true "red" false "green"})
-(def link-color {true "grey" false "black"})
+(def link-color {true "black" false "grey"})
 (def shape "box")
 
 (defn goal-to-node [goals]
@@ -11,18 +11,15 @@
     (str id " [label=\"" id ": " name
          "\", color=\"" (color open) "\", shape=\"" shape "\"];")))
 
-(defn dependencies-to-links [goals closed-ids]
-  (for [{:keys [id depends]} goals]
-    (let [closed? (contains? closed-ids id)
-          col (link-color closed?)]
-      (map #(str id " -> " % " [color=\"" col "\"];") depends))))
+(defn dependencies-to-links [goals]
+  (for [{:keys [id depends open]} goals]
+    (map #(str id " -> " % " [color=\"" (link-color open) "\"];") depends)))
 
 (defn to-graph [goals]
-  (let [prepared-goals (remove empty? goals)
-        closed (->> prepared-goals (remove :open) (map :id) set)]
+  (let [prepared-goals (remove empty? goals)]
     (flatten (list "digraph g {"
                (goal-to-node prepared-goals)
-               (dependencies-to-links prepared-goals closed)
+               (dependencies-to-links prepared-goals)
                "}"))))
 
 ;; untested (yes, I'm too lazy)
