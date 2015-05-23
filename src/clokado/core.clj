@@ -12,7 +12,7 @@
 
 (defn mikado [name]
   "Creates initial mikado goal"
-  [{:name name :open true :depends #{}}])
+  [{:id 0 :name name :open true :depends #{}}])
 
 (defn add
   ([goals name]
@@ -20,13 +20,13 @@
     (add goals name 0))
   ([goals name id]
     "Add new goal to existing ones, which blocks goal identified by id"
-    (conj goals {:name name :open true :depends #{id}})))
+    (conj goals {:id (count goals) :name name :open true :depends #{id}})))
 
 (defn top [goals]
   "Returns a list of open goals which no one goal depends on"
   (let [blocked-goals (->> goals (filter :open) (mapcat :depends) set)]
     (->> goals
-         (keep-indexed #(when-not (.contains blocked-goals %1) %2))
+         (remove #(contains? blocked-goals (:id %)))
          (filter :open)
          vec)))
 
