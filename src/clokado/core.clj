@@ -62,8 +62,7 @@
     (if (empty? ids)
       gs
       (let [next-goals (->> (reduce #(assoc %1 %2 {}) gs ids)
-                            (map #(if (nil? (:depends %)) {} (update-in % [:depends] difference ids)))
-                            vec)
+                            (mapv #(if (nil? (:depends %)) {} (update-in % [:depends] difference ids))))
             next-id (->> next-goals
                          (map-indexed #(list %1 (if (empty? %2) -1 (count (:depends %2)))))
                          (filter #(zero? (second %)))
