@@ -6,20 +6,17 @@
 (def link-color {true "black" false "grey"})
 (def shape "box")
 
-(defn goal-to-node [goals]
-  (for [{:keys [id name open]} goals]
-    (str id " [label=\"" id ": " name
-         "\", color=\"" (color open) "\", shape=\"" shape "\"];")))
+(defn goal-to-node [{id :id name :name open :open}]
+  (str id " [label=\"" id ": " name "\", color=\"" (color open) "\", shape=\"" shape "\"];"))
 
-(defn dependencies-to-links [goals]
-  (for [{:keys [id depends open]} goals]
-    (map #(str id " -> " % " [color=\"" (link-color open) "\"];") depends)))
+(defn dependencies-to-links [{id :id depends :depends open :open}]
+  (map #(str id " -> " % " [color=\"" (link-color open) "\"];") depends))
 
 (defn to-graph [goals]
   (let [prepared-goals (remove empty? goals)]
     (flatten (list "digraph g {"
-               (goal-to-node prepared-goals)
-               (dependencies-to-links prepared-goals)
+               (map goal-to-node prepared-goals)
+               (map dependencies-to-links prepared-goals)
                "}"))))
 
 ;; untested (yes, I'm too lazy)
