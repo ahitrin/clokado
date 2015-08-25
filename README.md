@@ -23,9 +23,9 @@ I suppose that in most cases you need to work with one diagram at once. In that 
     (use 'clokado.global)
     (mikado! "Feed the kitty" "example")
 
-Here "Feed the kitty" is your Mikado Goal, and "example" is the name of diagram to be drawn (actually, it's "example.png").
+Here "Feed the kitty" is your Mikado Goal, and "example" is the name of diagram to be drawn. Actually, it creates 3 files: "example.png" with diagram image (open it in your image viewer), "example.dot" (intermediate source used to create diagram) and "example" (saved state of your diagram).
 
-You can launch your preffered image viewer to find that image "example.png" has appeared in the directory you've been launched REPL. Please enable auto-refresh and go on with diagram hacking:
+You can now launch your preffered image viewer to find that image "example.png" has appeared in the directory you've been launched REPL. Please enable auto-refresh and go on with diagram hacking:
 
     (add! "Find the food")
     (add! "Go to the store" 1)
@@ -41,6 +41,9 @@ What we've got in result:
 ![pic](doc/example.png)
 
 When you've got tired of current goal tree (or better complete it), just start new one with `mikado!` function.
+You could easily return back to old diagram later using `load!` function:
+
+    (load! "example")
 
 ## Further plans
 
