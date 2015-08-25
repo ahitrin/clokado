@@ -49,7 +49,6 @@ You could easily return back to old diagram later using `load!` function:
 
 I just want to use it for some time and determine what else should be done. Maybe, something like that:
 
- * some helper functions that make usage in REPL a bit easier and faster
  * single-page web app based on these functions (I'll take a look at ClojureScript)
  * something else
 
