@@ -52,3 +52,6 @@
 
 (defn unlink! [a b]
   (dosync (alter tree unlink a b) (dump!) (redraw!)))
+
+(defn insert! [name a b]
+  (dosync (alter tree insert name a b) (dump!) (redraw!)))

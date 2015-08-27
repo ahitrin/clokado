@@ -45,6 +45,13 @@
     (let [goals (add (mikado "first") "cauybfasdfa")]
       (slice-should-be (rename goals 1 "second") :name '("first" "second")))))
 
+(deftest insert-goal-in-the-middle
+  (testing "extend existing chain in the middle"
+    (let [origin (add (mikado "first") "next")
+          goals (insert origin "wait" 0 1)]
+      (slice-should-be goals :name '("first" "next" "wait"))
+      (slice-should-be goals :depends '(#{} #{2} #{0})))))
+
 ;; tests on tree info
 
 (def simplest
