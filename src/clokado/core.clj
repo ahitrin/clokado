@@ -67,7 +67,8 @@
   (loop [gs goals ids (list id)]
     (if (empty? ids)
       gs
-      (let [next-goals (->> (reduce #(assoc %1 %2 {}) gs ids)
+      (let [next-goals (->> ids
+                            (reduce #(assoc %1 %2 {}) gs)
                             (mapv #(if (nil? (:depends %)) {} (update-in % [:depends] difference ids))))
             next-id (->> next-goals
                          (remove empty?)
