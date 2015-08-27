@@ -10,7 +10,7 @@ It's simple yet useful method for large-scale software refactoring. But you also
 
 This library is in Alpha state, and general usage patterns are not clearly defined yet. But what do we have for now:
 
- * you can use functions `mikado`, `add`, `close` to create new goals and close existing ones
+ * you can use functions `mikado`, `add`, `insert`, `close` to create new goals and close existing ones
  * you can use `delete` function to remove unneeded goals
  * you can use functions `link` and `unlink` to create and remove links between goals
  * you can use `top` function over your goal tree to see what active goals do you have
@@ -23,9 +23,9 @@ I suppose that in most cases you need to work with one diagram at once. In that 
     (use 'clokado.global)
     (mikado! "Feed the kitty" "example")
 
-Here "Feed the kitty" is your Mikado Goal, and "example" is the name of diagram to be drawn. Actually, it creates 3 files: "example.png" with diagram image (open it in your image viewer), "example.dot" (intermediate source used to create diagram) and "example" (saved state of your diagram).
+Here "Feed the kitty" is your Mikado Goal, and "example" is the name of diagram to be drawn. Actually, it creates 3 files: `example.png` with diagram image (open it in your image viewer), `example.dot` (intermediate source used to create diagram) and `example` (saved state of your diagram).
 
-You can now launch your preffered image viewer to find that image "example.png" has appeared in the directory you've been launched REPL. Please enable auto-refresh and go on with diagram hacking:
+You can now launch your preffered image viewer to find that image `example.png` has appeared in the directory you've been launched REPL. Please enable auto-refresh and go on with diagram hacking:
 
     (add! "Find the food")
     (add! "Go to the store" 1)
