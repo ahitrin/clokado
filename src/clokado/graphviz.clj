@@ -6,11 +6,16 @@
 (def link-color {true "black" false "grey"})
 (def shape "box")
 
-(defn goal-to-node [{id :id name :name open :open}]
-  (str id " [label=\"" id ": " name "\", color=\"" (color open) "\", shape=\"" shape "\"];"))
+(defn goal-to-node [{id :id name :name open :open ontop :ontop}]
+  (format "%d [%s];"
+          id
+          (clojure.string/join ", "
+            [(format "label=\"%d: %s\"" id name)
+             (format "color=\"%s\"" (color open))
+             (format "shape=\"%s\"" shape)])))
 
 (defn dependencies-to-links [{id :id depends :depends open :open}]
-  (map #(str id " -> " % " [color=\"" (link-color open) "\"];") depends))
+  (map #(format "%d -> %d [color=\"%s\"];" id % (link-color open)) depends))
 
 (defn to-graph [goals]
   (let [prepared-goals (remove empty? goals)]
