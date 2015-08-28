@@ -9,19 +9,25 @@
 (defn goal-to-node [{id :id name :name open :open ontop :ontop}]
   (format "%d [%s];"
           id
-          (clojure.string/join ", "
-            [(format "label=\"%d: %s\"" id name)
-             (format "color=\"%s\"" (color open))
-             (format "shape=\"%s\"" shape)])))
+          (->> [(format "label=\"%d: %s\"" id name)
+                (format "color=\"%s\"" (color open))
+                (format "shape=\"%s\"" shape)
+                (when ontop "style=\"bold\"")]
+               (remove nil?)
+               (clojure.string/join ", "))))
 
 (defn dependencies-to-links [{id :id depends :depends open :open}]
   (map #(format "%d -> %d [color=\"%s\"];" id % (link-color open)) depends))
 
 (defn to-graph [goals]
-  (let [prepared-goals (remove empty? goals)]
+  (let [tops (->> goals top (map :id) set)
+        graph-info (->> goals
+                        (remove empty?)
+                        (map #(assoc % :ontop
+                                     (contains? tops (:id %)))))]
     (flatten (list "digraph g {"
-               (map goal-to-node prepared-goals)
-               (map dependencies-to-links prepared-goals)
+               (map goal-to-node graph-info)
+               (map dependencies-to-links graph-info)
                "}"))))
 
 ;; untested (yes, I'm too lazy)
