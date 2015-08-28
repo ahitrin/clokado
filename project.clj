@@ -1,4 +1,4 @@
-(defproject clokado "0.3.1-SNAPSHOT"
+(defproject clokado "0.3.6"
   :description "Simple Clojure library for Mikado Method"
   :url "https://github.com/ahitrin/clokado"
   :license {:name "Eclipse Public License"
