@@ -15,7 +15,7 @@
   (testing "transformation of the smallest mikado tree"
     (is (= (to-graph simplest)
            '("digraph g {"
-             "0 [label=\"0: Just do it\", color=\"red\", shape=\"box\"];"
+             "0 [label=\"0: Just do it\", color=\"red\", shape=\"box\", style=\"bold\"];"
              "}")))))
 
 (deftest kitty-case
@@ -24,7 +24,7 @@
            '("digraph g {"
              "0 [label=\"0: Feed the kitty\", color=\"red\", shape=\"box\"];"
              "1 [label=\"1: Find the food\", color=\"red\", shape=\"box\"];"
-             "2 [label=\"2: Go to the store\", color=\"red\", shape=\"box\"];"
+             "2 [label=\"2: Go to the store\", color=\"red\", shape=\"box\", style=\"bold\"];"
              "1 -> 0 [color=\"black\"];"
              "2 -> 1 [color=\"black\"];"
              "}")))))
@@ -34,7 +34,7 @@
     (is (= (to-graph (close kitty 2))
            '("digraph g {"
              "0 [label=\"0: Feed the kitty\", color=\"red\", shape=\"box\"];"
-             "1 [label=\"1: Find the food\", color=\"red\", shape=\"box\"];"
+             "1 [label=\"1: Find the food\", color=\"red\", shape=\"box\", style=\"bold\"];"
              "2 [label=\"2: Go to the store\", color=\"green\", shape=\"box\"];"
              "1 -> 0 [color=\"black\"];"
              "2 -> 1 [color=\"grey\"];"
@@ -45,7 +45,7 @@
     (is (= (to-graph (delete kitty 2))
            '("digraph g {"
              "0 [label=\"0: Feed the kitty\", color=\"red\", shape=\"box\"];"
-             "1 [label=\"1: Find the food\", color=\"red\", shape=\"box\"];"
+             "1 [label=\"1: Find the food\", color=\"red\", shape=\"box\", style=\"bold\"];"
              "1 -> 0 [color=\"black\"];"
              "}")))))
 
