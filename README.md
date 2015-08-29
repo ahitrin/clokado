@@ -2,6 +2,8 @@
 
 A small Clojure library designed to implement [Mikado Method](http://mikadomethod.wordpress.com/) abstractions.
 
+[![Clojars Project](http://clojars.org/clokado/latest-version.svg)](http://clojars.org/clokado)
+
 ## Mikado Method
 
 It's simple yet useful method for large-scale software refactoring. But you also can use it for other purposes. Please refer to the original site for more information.
