@@ -20,7 +20,9 @@
     (add goals name 0))
   ([goals name id]
     "Add new goal to existing ones, which blocks goal identified by id"
-    (conj goals {:id (count goals) :name name :open true :depends #{id}})))
+    (if (< (count goals) id)
+      goals
+      (conj goals {:id (count goals) :name name :open true :depends #{id}}))))
 
 (defn top [goals]
   "Returns a list of open goals which no one goal depends on"
@@ -29,29 +31,40 @@
     (remove #(contains? blocked (:id %)) only-open)))
 
 (defn rename [goals id new-name]
-  "Change name of the given goal"
-  (assoc-in goals [id :name] new-name))
+  "Change name of the given existing goal"
+  (if (<= (count goals) id)
+    goals
+    (assoc-in goals [id :name] new-name)))
 
 (defn close [goals id]
-  "Mark goal with given id as closed"
-  (assoc-in goals [id :open] false))
+  "Mark existing goal with given id as closed"
+  (if (<= (count goals) id)
+    goals
+    (assoc-in goals [id :open] false)))
 
 (defn reopen [goals id]
-  "Mark goal with given id as open again"
-  (assoc-in goals [id :open] true))
+  "Mark existing goal with given id as open again"
+  (if (<= (count goals) id)
+    goals
+    (assoc-in goals [id :open] true)))
 
 (defn link [goals a b]
-  "Creates a new link. Goal b now blocks goal a"
-  (if (or (= a b) (zero? b))
+  "Creates a new link. Goal b now blocks goal a. Both goals must exist"
+  (if (<= (count goals) (max a b))
     goals
-    (update-in goals [b :depends] conj a)))
+    (if (or (= a b) (zero? b))
+      goals
+      (update-in goals [b :depends] conj a))))
 
 (defn unlink [goals a b]
-  "Removes existing link between goals a and b. The last link cannot be removed"
-  (let [old-deps (:depends (nth goals b))]
-    (if (= 1 (count old-deps))
-      goals
-      (update-in goals [b :depends] disj a))))
+  "Removes existing link between goals a and b. Both goals must exist.
+  The last link cannot be removed"
+  (if (<= (count goals) (max a b))
+    goals
+    (let [old-deps (:depends (nth goals b))]
+      (if (= 1 (count old-deps))
+        goals
+        (update-in goals [b :depends] disj a)))))
 
 (defn insert [goals name a b]
   "Insert new nodes between two existing ones"
@@ -62,10 +75,10 @@
         (unlink a b))))
 
 (defn delete [goals id]
-  "Recursively removes goal from the tree by id, together with goals that block it.
+  "Recursively removes existing goal from the tree by id, together with goals that block it.
    Goals that depends also on some other goals, stay alive.
    Mikado goal cannot be deleted."
-  (if (zero? id)
+  (if (or (zero? id) (<= (count goals) id))
     goals
     (loop [gs goals ids (list id)]
           (if (empty? ids)
