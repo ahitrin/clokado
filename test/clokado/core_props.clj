@@ -28,6 +28,12 @@
 (defn apply-all [as]
   (reduce #(%2 %1) (mikado "start") (map to-real-action as)))
 
+(defspec all-nodes-have-id
+  1000
+  (prop/for-all [a actions]
+                (let [result (apply-all a)]
+                  (not-any? nil? (map :id (remove empty? result))))))
+
 (defspec always-have-nonzero-size
   1000
   (prop/for-all [a actions]
