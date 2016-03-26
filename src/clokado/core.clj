@@ -63,16 +63,19 @@
 
 (defn delete [goals id]
   "Recursively removes goal from the tree by id, together with goals that block it.
-   Goals that depends also on some other goals, stay alive"
-  (loop [gs goals ids (list id)]
-    (if (empty? ids)
-      gs
-      (let [next-goals (->> ids
-                            (reduce #(assoc %1 %2 {}) gs)
-                            (mapv #(if (nil? (:depends %)) {} (update-in % [:depends] difference ids))))
-            next-id (->> next-goals
-                         (filter #(and (seq %)
-                                       (pos? (:id %))
-                                       (empty? (:depends %))))
-                         (map :id))]
-        (recur next-goals next-id)))))
+   Goals that depends also on some other goals, stay alive.
+   Mikado goal cannot be deleted."
+  (if (zero? id)
+    goals
+    (loop [gs goals ids (list id)]
+          (if (empty? ids)
+            gs
+            (let [next-goals (->> ids
+                                  (reduce #(assoc %1 %2 {}) gs)
+                                  (mapv #(if (nil? (:depends %)) {} (update-in % [:depends] difference ids))))
+                  next-id (->> next-goals
+                               (filter #(and (seq %)
+                                             (pos? (:id %))
+                                             (empty? (:depends %))))
+                               (map :id))]
+              (recur next-goals next-id))))))
