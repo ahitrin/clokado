@@ -90,5 +90,6 @@
                                (filter #(and (seq %)
                                              (pos? (:id %))
                                              (empty? (:depends %))))
-                               (map :id))]
+                               (map :id)
+                               (into #{}))]
               (recur next-goals next-id))))))
