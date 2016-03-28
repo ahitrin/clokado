@@ -14,13 +14,17 @@
   "Creates initial mikado goal"
   [{:id 0 :name name :open true :depends #{}}])
 
+(defn- missing? [goals id]
+  "Return true iff goal with given id wasn't created yet or already deleted"
+  (or (<= (count goals) id) (empty? (nth goals id))))
+
 (defn add
   ([goals name]
     "Adds new goal to existing ones, which blocks mikado goal"
     (add goals name 0))
   ([goals name id]
     "Add new goal to existing ones, which blocks goal identified by id"
-    (if (< (count goals) id)
+    (if (missing? goals id)
       goals
       (conj goals {:id (count goals) :name name :open true :depends #{id}}))))
 
@@ -32,34 +36,35 @@
 
 (defn rename [goals id new-name]
   "Change name of the given existing goal"
-  (if (or (<= (count goals) id) (empty? (nth goals id)))
+  (if (missing? goals id)
     goals
     (assoc-in goals [id :name] new-name)))
 
 (defn close [goals id]
   "Mark existing goal with given id as closed"
-  (if (<= (count goals) id)
+  (if (missing? goals id)
     goals
     (assoc-in goals [id :open] false)))
 
 (defn reopen [goals id]
   "Mark existing goal with given id as open again"
-  (if (<= (count goals) id)
+  (if (missing? goals id)
     goals
     (assoc-in goals [id :open] true)))
 
 (defn link [goals a b]
   "Creates a new link. Goal b now blocks goal a. Both goals must exist"
-  (if (<= (count goals) (max a b))
-    goals
-    (if (or (= a b) (zero? b))
-      goals
-      (update-in goals [b :depends] conj a))))
+  (if (or (= a b)
+          (zero? b)
+          (missing? goals a)
+          (missing? goals b))
+     goals
+     (update-in goals [b :depends] conj a)))
 
 (defn unlink [goals a b]
   "Removes existing link between goals a and b. Both goals must exist.
   The last link cannot be removed"
-  (if (<= (count goals) (max a b))
+  (if (or (missing? goals a) (missing? goals b))
     goals
     (let [old-deps (:depends (nth goals b))]
       (if (= 1 (count old-deps))
@@ -78,7 +83,7 @@
   "Recursively removes existing goal from the tree by id, together with goals that block it.
    Goals that depends also on some other goals, stay alive.
    Mikado goal cannot be deleted."
-  (if (or (zero? id) (<= (count goals) id))
+  (if (missing? goals id)
     goals
     (loop [gs goals ids (list id)]
           (if (empty? ids)
