@@ -32,7 +32,7 @@
 
 (defn rename [goals id new-name]
   "Change name of the given existing goal"
-  (if (<= (count goals) id)
+  (if (or (<= (count goals) id) (empty? (nth goals id)))
     goals
     (assoc-in goals [id :name] new-name)))
 
