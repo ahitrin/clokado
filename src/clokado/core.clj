@@ -88,7 +88,7 @@
   (if (missing? goals id)
     goals
     (loop [gs goals ids (list id)]
-          (if (empty? ids)
+          (if (or (empty? ids) (zero? id))
             gs
             (let [next-goals (->> ids
                                   (reduce #(assoc %1 %2 {}) gs)
