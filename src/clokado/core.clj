@@ -52,12 +52,24 @@
     goals
     (assoc-in goals [id :open] true)))
 
+(defn- is-loop? [goals from to]
+  "Return true if link from→to creates loop in goals, false otherwise"
+  (let [deps (map :depends goals)]
+    (loop [parnts (nth deps from)]
+      (let [new-parnts (reduce clojure.set/union (map (partial nth deps) parnts))]
+        (cond
+          (contains? parnts to) true
+          (= parnts new-parnts) false
+          :else (recur new-parnts))))))
+
 (defn link [goals a b]
-  "Creates a new link. Goal b now blocks goal a. Both goals must exist"
+  "Creates a new link. Goal b now blocks goal a. Both goals must exist.
+  Attempts to create circular links are ignored."
   (if (or (= a b)
           (zero? b)
           (missing? goals a)
-          (missing? goals b))
+          (missing? goals b)
+          (is-loop? goals a b))
      goals
      (update-in goals [b :depends] conj a)))
 
