@@ -39,6 +39,18 @@
   (prop/for-all [a actions]
                 (< 0 (count (apply-all a)))))
 
+(defspec grow-from-mikado-node
+  1000
+  (prop/for-all [a actions]
+                (let [result (apply-all a)
+                      ids (replace {nil #{0}} (assoc-in (mapv :depends result) [0] #{0}))]
+                  (= (repeat (count ids) #{0})
+                     (loop [ids ids x (count ids)]
+                       (if (zero? x)
+                         ids
+                         (recur (map #(reduce clojure.set/union (map (partial nth ids) %)) ids)
+                                (dec x))))))))
+
 
 (comment
   (map #(ns-unmap *ns* %) (keys (ns-interns *ns*)))
