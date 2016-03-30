@@ -72,12 +72,14 @@
         (update-in goals [b :depends] disj a)))))
 
 (defn insert [goals name a b]
-  "Insert new nodes between two existing ones"
-  (let [next-id (count goals)]
-    (-> goals
-        (add name a)
-        (link next-id b)
-        (unlink a b))))
+  "Insert new nodes between two different existing ones"
+  (if (= a b)
+    goals
+    (let [next-id (count goals)]
+        (-> goals
+            (add name a)
+            (link next-id b)
+            (unlink a b)))))
 
 (defn delete [goals id]
   "Recursively removes existing goal from the tree by id, together with goals that block it.
