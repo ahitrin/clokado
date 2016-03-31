@@ -2,7 +2,7 @@
 
 A small Clojure library designed to implement [Mikado Method](http://mikadomethod.wordpress.com/) abstractions.
 
-[![Clojars Project](http://clojars.org/clokado/latest-version.svg)](http://clojars.org/clokado)
+[![Build Status](https://travis-ci.org/ahitrin/clokado.svg?branch=master)](https://travis-ci.org/ahitrin/clokado) [![Clojars Project](http://clojars.org/clokado/latest-version.svg)](http://clojars.org/clokado)
 
 ## Mikado Method
 
