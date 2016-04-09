@@ -51,6 +51,22 @@
                          (recur (map #(reduce clojure.set/union (map (partial nth ids) %)) ids)
                                 (dec x))))))))
 
+(defspec closed-goals-must-not-have-open-leaves
+  1000
+  (prop/for-all [a actions]
+                (let [result (apply-all a)
+                      closed-ids (->> result
+                                      (filter #(false? (:open %)))
+                                      (map :id)
+                                      (into #{}))
+                      child-openess (->> result
+                                         (filter #(not (empty? (clojure.set/intersection
+                                                                 closed-ids
+                                                                 (:depends %)))))
+                                         (map :open)
+                                         (into #{}))]
+                  (contains? #{#{} #{false}} child-openess))))
+
 
 (comment
   (map #(ns-unmap *ns* %) (keys (ns-interns *ns*)))
