@@ -20,11 +20,11 @@
 
 (defn add
   ([goals name]
-    "Adds new goal to existing ones, which blocks mikado goal"
+    "Adds new goal which blocks mikado goal"
     (add goals name 0))
   ([goals name id]
-    "Add new goal to existing ones, which blocks goal identified by id"
-    (if (missing? goals id)
+    "Add new goal that blocks existing open goal identified by given id"
+    (if (or (missing? goals id) (not (:open (nth goals id))))
       goals
       (conj goals {:id (count goals) :name name :open true :depends #{id}}))))
 
