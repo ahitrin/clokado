@@ -41,8 +41,8 @@
     (assoc-in goals [id :name] new-name)))
 
 (defn close [goals id]
-  "Mark existing goal with given id as closed"
-  (if (missing? goals id)
+  "Mark existing top goal with given id as closed"
+  (if (or (missing? goals id) (not (contains? (set (map :id (top goals))) id)))
     goals
     (assoc-in goals [id :open] false)))
 
