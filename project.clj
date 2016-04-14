@@ -1,4 +1,4 @@
-(defproject clokado "0.3.7"
+(defproject clokado "0.3.8-SNAPSHOT"
   :description "Simple Clojure library for Mikado Method"
   :url "https://github.com/ahitrin/clokado"
   :scm {:name "git"
