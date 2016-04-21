@@ -64,11 +64,13 @@
 
 (defn link [goals a b]
   "Creates a new link. Goal b now blocks goal a. Both goals must exist.
+  Both goals must be either open or closed simultaneously.
   Attempts to create circular links are ignored."
   (if (or (= a b)
           (zero? b)
           (missing? goals a)
           (missing? goals b)
+          (not= (:open (nth goals a)) (:open (nth goals b)))
           (is-loop? goals a b))
      goals
      (update-in goals [b :depends] conj a)))
