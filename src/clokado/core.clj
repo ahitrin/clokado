@@ -14,9 +14,9 @@
   "Creates initial mikado goal"
   [{:id 0 :name name :open true :depends #{}}])
 
-(defn- missing? [goals id]
-  "Return true iff goal with given id wasn't created yet or already deleted"
-  (or (<= (count goals) id) (empty? (nth goals id))))
+(defn- existing? [goals id]
+  "Return true iff goal with given id is created but not deleted yet"
+  (and (< id (count goals)) (not-empty (nth goals id))))
 
 (defn add
   ([goals name]
@@ -24,9 +24,9 @@
     (add goals name 0))
   ([goals name id]
     "Add new goal that blocks existing open goal identified by given id"
-    (if (or (missing? goals id) (not (:open (nth goals id))))
-      goals
-      (conj goals {:id (count goals) :name name :open true :depends #{id}}))))
+   (if (and (existing? goals id) (:open (nth goals id)))
+     (conj goals {:id (count goals) :name name :open true :depends #{id}})
+     goals)))
 
 (defn top [goals]
   "Returns a list of open goals which no one goal depends on"
@@ -36,21 +36,21 @@
 
 (defn rename [goals id new-name]
   "Change name of the given existing goal"
-  (if (missing? goals id)
-    goals
-    (assoc-in goals [id :name] new-name)))
+  (if (existing? goals id)
+    (assoc-in goals [id :name] new-name)
+    goals))
 
 (defn close [goals id]
   "Mark existing top goal with given id as closed"
-  (if (or (missing? goals id) (not (contains? (set (map :id (top goals))) id)))
-    goals
-    (assoc-in goals [id :open] false)))
+  (if (and (existing? goals id) (contains? (set (map :id (top goals))) id))
+    (assoc-in goals [id :open] false)
+    goals))
 
 (defn reopen [goals id]
   "Mark existing goal with given id as open again"
-  (if (missing? goals id)
-    goals
-    (assoc-in goals [id :open] true)))
+  (if (existing? goals id)
+    (assoc-in goals [id :open] true)
+    goals))
 
 (defn- is-loop? [goals from to]
   "Return true if link from→to creates loop in goals, false otherwise"
@@ -66,41 +66,40 @@
   "Creates a new link. Goal b now blocks goal a. Both goals must exist.
   Both goals must be either open or closed simultaneously.
   Attempts to create circular links are ignored."
-  (if (or (= a b)
-          (zero? b)
-          (missing? goals a)
-          (missing? goals b)
-          (not= (:open (nth goals a)) (:open (nth goals b)))
-          (is-loop? goals a b))
-     goals
-     (update-in goals [b :depends] conj a)))
+  (if (and (not= a b)
+           (pos? b)
+           (existing? goals a)
+           (existing? goals b)
+           (= (:open (nth goals a)) (:open (nth goals b)))
+           (not (is-loop? goals a b)))
+    (update-in goals [b :depends] conj a)
+    goals))
 
 (defn unlink [goals a b]
   "Removes existing link between goals a and b. Both goals must exist.
   The last link cannot be removed"
-  (if (or (missing? goals a) (missing? goals b))
-    goals
+  (if (and (existing? goals a) (existing? goals b))
     (let [old-deps (:depends (nth goals b))]
       (if (= 1 (count old-deps))
         goals
-        (update-in goals [b :depends] disj a)))))
+        (update-in goals [b :depends] disj a)))
+    goals))
 
 (defn insert [goals name a b]
   "Insert new nodes between two different existing ones"
-  (if (= a b)
-    goals
+  (if (not= a b)
     (let [next-id (count goals)]
         (-> goals
             (add name a)
             (link next-id b)
-            (unlink a b)))))
+            (unlink a b)))
+    goals))
 
 (defn delete [goals id]
   "Recursively removes existing goal from the tree by id, together with goals that block it.
    Goals that depends also on some other goals, stay alive.
    Mikado goal cannot be deleted."
-  (if (missing? goals id)
-    goals
+  (if (existing? goals id)
     (loop [gs goals ids (list id)]
           (if (or (empty? ids) (zero? id))
             gs
@@ -113,4 +112,5 @@
                                              (empty? (:depends %))))
                                (map :id)
                                (into #{}))]
-              (recur next-goals next-id))))))
+              (recur next-goals next-id))))
+    goals))
